@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clima Interactivo 🌎</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico\&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Pacifico', cursive;
+      text-align: center;
+      padding: 20px;
+      transition: background 1s ease;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      color: white;
+    }
+    h1 { font-size: 3em; margin-bottom: 20px; }
+    .card {
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px;
+      display: inline-block;
+      width: 250px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.4);
+      transition: transform 0.5s;
+    }
+    .card:hover { transform: scale(1.05); }
+    .icon { font-size: 50px; margin: 10px; animation: float 3s infinite; }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    /* Animaciones extra */
+    .sun { color: yellow; animation: spin 6s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .rain::after {
+      content: "💧💧💧";
+      display: block;
+      font-size: 20px;
+      animation: drop 1s infinite;
+    }
+    @keyframes drop {
+      0% { opacity: 0; transform: translateY(-10px); }
+      50% { opacity: 1; transform: translateY(10px); }
+      100% { opacity: 0; transform: translateY(20px); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🌎 Clima Interactivo</h1>
+  <div id="weather"></div>
+
+  <script>
+    const apiKey = "TU_API_KEY"; // 👈 Pega aquí tu clave de OpenWeatherMap
+    const cities = ["Quito", "Madrid", "Londres", "Nueva York", "Tokio", "Buenos Aires"];
+
+    // Colores por país
+    const countryColors = {
+      "EC": "linear-gradient(to right, yellow, blue, red)",        // Ecuador
+      "ES": "linear-gradient(to right, red, yellow, red)",        // España
+      "GB": "linear-gradient(to right, navy, white, red)",        // Reino Unido
+      "US": "linear-gradient(to right, blue, white, red)",        // Estados Unidos
+      "JP": "linear-gradient(to right, white, red)",              // Japón
+      "AR": "linear-gradient(to right, skyblue, white, skyblue)"  // Argentina
+    };
+
+    // Íconos según clima
+    function getWeatherIcon(main) {
+      if (main.includes("Clear")) return `<div class="icon sun">☀️</div>`;
+      if (main.includes("Cloud")) return `<div class="icon">☁️</div>`;
+      if (main.includes("Rain")) return `<div class="icon rain">🌧️</div>`;
+      if (main.includes("Snow")) return `<div class="icon">❄️</div>`;
+      return `<div class="icon">🌍</div>`;
+    }
+
+    async function getWeather(city) {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}\&appid=${apiKey}\&units=metric\&lang=es`;
+      const response = await fetch(url);
+      return response.json();
+    }
+
+    async function showWeather() {
+      const container = document.getElementById("weather");
+      for (const city of cities) {
+        try {
+          const data = await getWeather(city);
+          const card = document.createElement("div");
+          card.className = "card";
+
+          // Fondo según el país
+          card.style.background = countryColors[data.sys.country] || "rgba(0,0,0,0.6)";
+
+          // Contenido
+          card.innerHTML = `
+            <h2>${data.name} (${data.sys.country})</h2>
+            ${getWeatherIcon(data.weather[0].main)}
+            <p>${data.weather[0].description}</p>
+            <p>🌡️ ${data.main.temp} °C</p>
+          `;
+          container.appendChild(card);
+        } catch (error) {
+          console.error("Error al obtener clima de", city, error);
+        }
+      }
+    }
+
+    showWeather();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clima Interactivo 🌎</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico\&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Pacifico', cursive;
+      text-align: center;
+      padding: 20px;
+      transition: background 1s ease;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      color: white;
+    }
+    h1 { font-size: 3em; margin-bottom: 20px; }
+    .card {
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px;
+      display: inline-block;
+      width: 250px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.4);
+      transition: transform 0.5s;
+    }
+    .card:hover { transform: scale(1.05); }
+    .icon { font-size: 50px; margin: 10px; animation: float 3s infinite; }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    /* Animaciones extra */
+    .sun { color: yellow; animation: spin 6s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .rain::after {
+      content: "💧💧💧";
+      display: block;
+      font-size: 20px;
+      animation: drop 1s infinite;
+    }
+    @keyframes drop {
+      0% { opacity: 0; transform: translateY(-10px); }
+      50% { opacity: 1; transform: translateY(10px); }
+      100% { opacity: 0; transform: translateY(20px); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🌎 Clima Interactivo</h1>
+  <div id="weather"></div>
+
+  <script>
+    const apiKey = "TU_API_KEY"; // 👈 Pega aquí tu clave de OpenWeatherMap
+    const cities = ["Quito", "Madrid", "Londres", "Nueva York", "Tokio", "Buenos Aires"];
+
+    // Colores por país
+    const countryColors = {
+      "EC": "linear-gradient(to right, yellow, blue, red)",        // Ecuador
+      "ES": "linear-gradient(to right, red, yellow, red)",        // España
+      "GB": "linear-gradient(to right, navy, white, red)",        // Reino Unido
+      "US": "linear-gradient(to right, blue, white, red)",        // Estados Unidos
+      "JP": "linear-gradient(to right, white, red)",              // Japón
+      "AR": "linear-gradient(to right, skyblue, white, skyblue)"  // Argentina
+    };
+
+    // Íconos según clima
+    function getWeatherIcon(main) {
+      if (main.includes("Clear")) return `<div class="icon sun">☀️</div>`;
+      if (main.includes("Cloud")) return `<div class="icon">☁️</div>`;
+      if (main.includes("Rain")) return `<div class="icon rain">🌧️</div>`;
+      if (main.includes("Snow")) return `<div class="icon">❄️</div>`;
+      return `<div class="icon">🌍</div>`;
+    }
+
+    async function getWeather(city) {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}\&appid=${apiKey}\&units=metric\&lang=es`;
+      const response = await fetch(url);
+      return response.json();
+    }
+
+    async function showWeather() {
+      const container = document.getElementById("weather");
+      for (const city of cities) {
+        try {
+          const data = await getWeather(city);
+          const card = document.createElement("div");
+          card.className = "card";
+
+          // Fondo según el país
+          card.style.background = countryColors[data.sys.country] || "rgba(0,0,0,0.6)";
+
+          // Contenido
+          card.innerHTML = `
+            <h2>${data.name} (${data.sys.country})</h2>
+            ${getWeatherIcon(data.weather[0].main)}
+            <p>${data.weather[0].description}</p>
+            <p>🌡️ ${data.main.temp} °C</p>
+          `;
+          container.appendChild(card);
+        } catch (error) {
+          console.error("Error al obtener clima de", city, error);
+        }
+      }
+    }
+
+    showWeather();
+  </script>
+</body>
+</html>
